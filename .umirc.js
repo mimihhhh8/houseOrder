@@ -13,6 +13,7 @@ export default {
         { path: '/addServe', component: '../pages/addServe/index' },
         {path:'/login',component:'../pages/login/index'},
         {path:'/register',component:'../pages/register/index'},
+        {path:'/mineOrder',component:'../pages/mineOrder/index'},
       ]
     },
     // { path: '/login/', component: '../pages/login/index.js' },

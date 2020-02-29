@@ -6,6 +6,7 @@ const crypto = require('crypto');
 // 用户注册判断
 const userRegister = async (req, res) => {
     let { username, password,value ,loginid, phone ,sex,age,detailaddress} = req.body;
+    let orderinfo={}
     let data = await userModel.userFind( username,value );
     if (data.length===1) {
         res.json({//response响应数据 传送给前端  JSON格式的数据
@@ -31,7 +32,7 @@ const userRegister = async (req, res) => {
         let name = Math.random().toString(36).substr(2, 8);
         // 默认用户头像
         let urlPic = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1578997777&di=513e95c541cfcb3ebbf566cf929a491d&src=http://www.17qq.com/img_qqtouxiang/75876952.jpeg";
-        let saveData = await userModel.userSave({ username, password: hash.digest("hex"), status, registerTime, name, urlPic,userstatus:value ,loginid, phone,sex ,age,detailaddress});
+        let saveData = await userModel.userSave({ username, password: hash.digest("hex"), status, registerTime, name, urlPic,userstatus:value ,loginid, phone,sex ,age,detailaddress,orderinfo});
         if (saveData) {
             res.json({
                 code: 200,

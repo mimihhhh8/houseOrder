@@ -1,95 +1,103 @@
 // model模块 MVC中的M数据的增删改查
-const mongoose=require("../utils/database");
+const mongoose = require("../utils/database");
 // 设置数据库字段
-const User=mongoose.model("yuser",{
-    username:String,
-    password:String,
-    status:Boolean,
-    registerTime:Number,
-    name:String,
-    urlPic:String,
-    userstatus:String,
+const User = mongoose.model("yuser", {
+    username: String,
+    password: String,
+    status: Boolean,
+    registerTime: Number,
+    name: String,
+    urlPic: String,
+    userstatus: String,
 
-    loginid:String,
-    phone:Number,
-    sex:String,
-    age:Number,
-    detailaddress:String
+    loginid: String,
+    phone: Number,
+    sex: String,
+    age: Number,
+    detailaddress: String,
+
+    // 用户预约成功，将订单信息存入用户基本信息中
+    orderinfo: Object
 })
 //.........................
-const Data=mongoose.model("hoursd",{
-    date:String,
-    date_status:String,
-    date_type:String,
-    hour:String
+const Data = mongoose.model("hoursd", {
+    date: String,
+    date_status: String,
+    date_type: String,
+    hour: String
 })
 //总数据
-const allData=()=>{
+const allData = () => {
     return Data.find();
 }
-const dataFind=()=>{
+const dataFind = () => {
     return Data.find().count();
 }
 //分页
-const hourDataPage=(page,limit)=>{
-    page=Number(page);
-    limit=Number(limit);
-    
-    return Data.find().skip((page-1)*limit).limit(limit);
+const hourDataPage = (page, limit) => {
+    page = Number(page);
+    limit = Number(limit);
+
+    return Data.find().skip((page - 1) * limit).limit(limit);
 }
 //日期查询
-const searchDate=(page,limit,startDate,endDate)=>{
-    startDate=String(startDate);
-    endDate=String(endDate);
-    page=Number(page);
-    limit=Number(limit);
-    return Data.find({date:{$gte:startDate,$lte:endDate}}).skip((page-1)*limit).limit(limit);
+const searchDate = (page, limit, startDate, endDate) => {
+    startDate = String(startDate);
+    endDate = String(endDate);
+    page = Number(page);
+    limit = Number(limit);
+    return Data.find({ date: { $gte: startDate, $lte: endDate } }).skip((page - 1) * limit).limit(limit);
 }
 //日期查询出的总条数
-const searchDateCount=(startDate,endDate)=>{
-    startDate=String(startDate);
-    endDate=String(endDate);
-    return Data.find({date:{$gte:startDate,$lte:endDate}}).count();
+const searchDateCount = (startDate, endDate) => {
+    startDate = String(startDate);
+    endDate = String(endDate);
+    return Data.find({ date: { $gte: startDate, $lte: endDate } }).count();
 }
-//日期类型的查询
-// const dateType=()=>{
-
-// }
 //................................
 // 查找单个用户的信息
-const userFind=(username,value)=>{
-    return User.find({username:username,userstatus:value});
-	// return User.find();
+const userFind = (username, value) => {
+    return User.find({ username: username, userstatus: value });
+    // return User.find();
 }
 // 保存用户信息,用户注册
-const userSave=(userInfo,cb)=>{
-    let user=new User(userInfo);
+const userSave = (userInfo, cb) => {
+    let user = new User(userInfo);
     return user.save()
 }
 //查询用户总信息，前端渲染
-const userInfo=()=>{
+const userInfo = () => {
     return User.find()
 }
-const userPass=(id)=>{
-    return  User.findOne({_id:id});
+const userPass = (id) => {
+    return User.findOne({ _id: id });
 }
 
-const updatePass=(id,newpassword)=>{
+const updatePass = (id, newpassword) => {
     console.log(id)
-    return  User.update({_id:id},{$set:{password:newpassword}})
+    return User.update({ _id: id }, { $set: { password: newpassword } })
 }
 //用户修改头像
-const UpdatePic=(id,urlPic)=>{
-    return User.update({_id:id},{$set:{urlPic:urlPic}});
+const UpdatePic = (id, urlPic) => {
+    return User.update({ _id: id }, { $set: { urlPic: urlPic } });
 }
 // 查询单个用户信息接口
-const userInter=(id)=>{
-    return User.findOne({_id:id});
+const userInter = (id) => {
+    return User.findOne({ _id: id });
 }
 
 
-
-module.exports={
+//在用户预约列表页，显示预约成功以后，将服务人员的信息存入用户信息中
+const saveOrderInfo = (record, userid) => {
+    // let user=new User(record);
+    // db.students.update({name:"chenzhou"},{$push:{"ailas":"Michael"}})
+    return User.update({ _id: userid }, { $push: { "orderinfo": record } })
+}
+//获取用户详细信息，包含了订单信息
+const userDetailInfo=(userid)=>{
+    return User.findOne({ _id: userid });
+}
+module.exports = {
     userFind,
     userSave,
     userPass,
@@ -103,5 +111,8 @@ module.exports={
     searchDateCount,
     allData,
     //用户总信息
-    userInfo
+    userInfo,
+    // 将预约成功的服务人员信息存入用户信息中
+    saveOrderInfo,
+    userDetailInfo
 }

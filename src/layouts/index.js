@@ -70,12 +70,12 @@ export default class BasicLayout extends Component {
               }
             >
            
-                   <Menu.Item key="1" onClick={()=>this.handleTo()}>人员信息管理</Menu.Item>
-            
-            
-              <Menu.Item key="2" onClick={()=>this.handleToOne()} >用户预约列表</Menu.Item>
-              <Menu.Item key="3" onClick={()=>this.handleToTwo()}>添加服务</Menu.Item>
-              <Menu.Item key="4">option4</Menu.Item>
+           <Menu.Item key="1" onClick={()=>{ router.push('/home')}}>人员信息管理</Menu.Item>
+            <Menu.Item key="2" onClick={()=>{ router.push('/serveList')}} >用户预约列表</Menu.Item>
+           {/* <Menu.Item key="1" onClick={()=>{ localStorage.getItem('userstatus')==='admin'?router.push('/home'):router.push('/')}}>人员信息管理</Menu.Item>
+            <Menu.Item key="2" onClick={()=>{ localStorage.getItem('userstatus')==='admin'?router.push('/serveList'):router.push('/')}} >用户预约列表</Menu.Item> */}
+            <Menu.Item key="3" onClick={()=>this.handleToTwo()}>添加服务</Menu.Item>
+              <Menu.Item key="4" onClick={()=>{ router.push('/mineOrder')}}>我的订单</Menu.Item>
             </SubMenu>
             <SubMenu
               key="sub2"
@@ -137,17 +137,17 @@ export default class BasicLayout extends Component {
 
   // 首页跳转
   
-  handleTo(){
-    console.log(localStorage.getItem('userstatus'))
-    if(localStorage.getItem('userstatus')==='admin'){
-      router.push('/home');
-    }
-    else{
-      alert('你无权范文')
-    }
+  // handleTo(){
+  //   console.log(localStorage.getItem('userstatus'))
+  //   if(localStorage.getItem('userstatus')==='admin'){
+  //     router.push('/home');
+  //   }
+  //   else{
+  //     alert('你无权范文')
+  //   }
 
     
-  }
+  // }
   //跳转管理员发布服务
   handleToOne(){
    router.push('/serveList')

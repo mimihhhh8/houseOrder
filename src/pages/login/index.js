@@ -97,6 +97,7 @@ import router from "umi/router"
             if(data.data.code===1){
                 alert(data.data.info)
                 localStorage.setItem("userstatus",data.data.data.userstatus)
+                localStorage.setItem("usersid",data.data.data._id)
                 router.push("/home")
             }else{
                 alert(data.data.info)

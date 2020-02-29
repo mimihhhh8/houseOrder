@@ -1,4 +1,5 @@
 const serviceModel=require("../model/service");
+const userModel=require("../model/user");
 //服务列表
 const serviceList=async (req,res)=>{
     let data=await serviceModel.serviceList();
@@ -38,19 +39,30 @@ const serviceSave=async (req,res)=>{
 //修改预约状态
 const updateStatues=async (req,res)=>{
     //解构的变量名称与前端payload内的变量名称要一致
-    let {flag,id}=req.body;
+    // record为serveList下的index.js中<Switch/>组件中事件on-changge传过来的参数，record代表当前行的所有内容
+    let {flag,id ,userid,record}=req.body;
+    // console.log(record)
     let data=await serviceModel.updateStatues(flag,id);
-    if(data){
+    if(data.ok===1&&flag===true){
+        let saveOrderList=await userModel.saveOrderInfo(record,userid)
+        let userDetailInfoList=await userModel.userDetailInfo(userid)
         res.json({
             code:200,
             errMsg:"",
             info:"预约成功",
-            data:data
+            data:data,
+            saveOrderList:saveOrderList,
+            userDetaiInfoList:userDetailInfoList
+        })
+    }else if(data.ok===1&&flag===false) {
+        res.json({
+            code:400,
+            info:"您已取消预约"
         })
     }else{
         res.json({
-            code:200,
-            info:"预约失败"
+            code:500,
+            info:"数据库错误"
         })
     }
 }

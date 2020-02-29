@@ -41,24 +41,26 @@ class index extends Component {
                     //render: (text, record, index) => {}
                     //参数分别为当前行的值，当前行数据，行索引
                     render: (text, record, dataIndex) => (
-                        <Switch checkedChildren='true' unCheckedChildren="false" defaultChecked={text} onChange={() => { this.onChange(text,record._id) }} key={index} />
+                        <Switch checkedChildren='true' unCheckedChildren="false" defaultChecked={text} onChange={() => { this.onChange(text,record._id,record) }} key={index} />
                     ),
                 },
             ]
         }
     }
-    onChange(value,id) {
+    onChange(value,id,record) {
+        let userid=localStorage.getItem('usersid')
         var flag=''
         if (value === true) {
             flag=false
         } else {
             flag=true
         }
-      
         //修改数据库中的预约状态
         let payload={
             flag,
-            id
+            id,
+            userid,
+            record
         }
         new Promise((resolve,reject)=>{
             this.props.dispatch({
@@ -68,9 +70,12 @@ class index extends Component {
                 payload,
             })
         }).then((res)=>{
-            console.log(res.data.data.ok,123)
-            if(res.data.data.ok===1){
-                message.success(res.data.info,onClose);
+            if(res.data.code===200){
+                message.success(res.data.info);
+            }else if(res.data.code===200){
+                message.success(res.data.info);
+            }else{
+                message.error(res.data.info);
             }
             this.initweblist();
         })

@@ -3,10 +3,12 @@ import servers from "../servers/servers";
 export default {
     namespace:'service',
     state:{
-
+        userOrderInfo:''
     },
     reducers:{
-
+        userOrderInfo(state,{userOrderInfo}){
+            return {...state,userOrderInfo}
+        }
     },
     effects:{
         *serviceList({reject,resolve},{call,put}){
@@ -25,7 +27,7 @@ export default {
         //修改状态
         *updateStatues({reject,resolve,payload},{call,put}){
             const res=yield call(servers.updateStatues['updateStatues'],{payload})
-            console.log(res)
+            yield put({type:"userOrderInfo",userOrderInfo:res})
             if(res){
                 resolve(res)
             }
