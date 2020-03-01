@@ -31,6 +31,14 @@ export default {
             if(res){
                 resolve(res)
             }
+        },
+        // 我的订单列表
+        *mineOrderList({reject,resolve,payload},{call,put}){
+            const res=yield call(servers.mineOrderList['mineOrderList'],{payload})
+            console.log(res)
+            if(res){
+                resolve(res)
+            }
         }
     }
 }

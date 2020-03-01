@@ -24,5 +24,9 @@ export default{
     //修改预约状态
     updateStatues:{
         updateStatues:({payload})=>post('/service/updateStatues',payload)
+    },
+    // 我的订单列表
+    mineOrderList:{
+        mineOrderList:({payload})=>post('/service/mineOrderList',payload)
     }
 } 

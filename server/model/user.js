@@ -17,7 +17,7 @@ const User = mongoose.model("yuser", {
     detailaddress: String,
 
     // 用户预约成功，将订单信息存入用户基本信息中
-    orderinfo: Object
+    orderinfo: Array
 })
 //.........................
 const Data = mongoose.model("hoursd", {
@@ -89,8 +89,6 @@ const userInter = (id) => {
 
 //在用户预约列表页，显示预约成功以后，将服务人员的信息存入用户信息中
 const saveOrderInfo = (record, userid) => {
-    // let user=new User(record);
-    // db.students.update({name:"chenzhou"},{$push:{"ailas":"Michael"}})
     return User.update({ _id: userid }, { $push: { "orderinfo": record } })
 }
 //获取用户详细信息，包含了订单信息

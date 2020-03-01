@@ -21,8 +21,13 @@ const serviceSave=(info)=>{
 const updateStatues=(value,id)=>{
     return Service.update({_id:id},{$set:{statues:value}})
 }
+// 我的订单列表
+const mineOrderList=(id)=>{
+    return Service.findOne({ _id: id });
+}
 module.exports={
     serviceList,
     serviceSave,
-    updateStatues
+    updateStatues,
+    mineOrderList
 }

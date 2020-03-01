@@ -6,4 +6,5 @@ const serviceController=require("../controller/service");
 router.get("/serviceList",serviceController.serviceList);
 router.post("/addService",serviceController.serviceSave);
 router.post("/updateStatues",serviceController.updateStatues);
+router.post("/mineOrderList",serviceController.mineOrderList);
 module.exports = router;

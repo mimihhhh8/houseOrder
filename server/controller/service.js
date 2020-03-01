@@ -66,8 +66,30 @@ const updateStatues=async (req,res)=>{
         })
     }
 }
+// 我的订单列表
+const mineOrderList=async (req,res)=>{
+    let {userId}=req.body;
+    
+    let list=await userModel.userDetailInfo(userId);
+    console.log(list)
+    if(list){
+        res.json({
+            code:200,
+            errMsg:"",
+            info:"获取列表成功",
+            data:list
+        })
+    }else{
+        res.json({
+            code:500,
+            errMsg:"",
+            info:"获取列表失败",
+        })
+    }
+}
 module.exports={
     serviceList,
     serviceSave,
-    updateStatues
+    updateStatues,
+    mineOrderList
 }
