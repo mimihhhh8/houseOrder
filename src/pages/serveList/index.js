@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'dva';
+import _ from "lodash"
 import { Table, Switch,message } from 'antd';
 //render  https://segmentfault.com/q/1010000020513212/
 class index extends Component {
@@ -70,6 +71,7 @@ class index extends Component {
                 payload,
             })
         }).then((res)=>{
+
             if(res.data.code===200){
                 message.success(res.data.info);
             }else if(res.data.code===200){
@@ -103,8 +105,9 @@ class index extends Component {
                 reject,
             })
         }).then((data) => {
+             let filterData=_.filter(data.data,e=>e.statues===false)
             this.setState({
-                list: data.data
+                list: filterData
             })
         })
     }
