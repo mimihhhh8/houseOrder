@@ -25,9 +25,14 @@ const updateStatues=(value,id)=>{
 const mineOrderList=(id)=>{
     return Service.findOne({ _id: id });
 }
+// 取消预约
+const cancleOrder=(flag,id)=>{
+    return Service.update({ _id: id }, { $set: { statues: flag } })
+}
 module.exports={
     serviceList,
     serviceSave,
     updateStatues,
-    mineOrderList
+    mineOrderList,
+    cancleOrder
 }

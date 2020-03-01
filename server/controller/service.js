@@ -71,7 +71,6 @@ const mineOrderList=async (req,res)=>{
     let {userId}=req.body;
     
     let list=await userModel.userDetailInfo(userId);
-    console.log(list)
     if(list){
         res.json({
             code:200,
@@ -87,9 +86,37 @@ const mineOrderList=async (req,res)=>{
         })
     }
 }
+//取消预约
+/**
+ * 
+ * db.mycollection.update(
+    {'_id': ObjectId("5150a1199fac0e6910000002")},
+    { $pull: { "items" : { id: 23 } } }
+); 
+ */
+const cancleOrder=async (req,res)=>{
+    let {flag,id,userId}=req.body
+    let cancleOrderList=await serviceModel.cancleOrder(flag,id);
+    let setOrder=await userModel.deleteYuyueUser(userId,id);
+    if(cancleOrderList&&setOrder){
+        res.json({
+            code:200,
+            errMsg:"",
+            info:"取消预约",
+            data:cancleOrderList
+        })
+    }else{
+        res.json({
+            code:500,
+            errMsg:"",
+            info:"取消预约失败",
+        })
+    }
+}
 module.exports={
     serviceList,
     serviceSave,
     updateStatues,
-    mineOrderList
+    mineOrderList,
+    cancleOrder
 }

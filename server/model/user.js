@@ -95,6 +95,12 @@ const saveOrderInfo = (record, userid) => {
 const userDetailInfo=(userid)=>{
     return User.findOne({ _id: userid });
 }
+const deleteYuyueUser=(userId,id)=>{
+    return User.update(
+        {_id:userId},
+        {$pull:{"orderinfo":{_id:id}}}
+    )
+}
 module.exports = {
     userFind,
     userSave,
@@ -102,7 +108,7 @@ module.exports = {
     updatePass,
     UpdatePic,
     userInter,
-
+    deleteYuyueUser,
     dataFind,
     hourDataPage,
     searchDate,

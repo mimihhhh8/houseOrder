@@ -7,4 +7,5 @@ router.get("/serviceList",serviceController.serviceList);
 router.post("/addService",serviceController.serviceSave);
 router.post("/updateStatues",serviceController.updateStatues);
 router.post("/mineOrderList",serviceController.mineOrderList);
+router.post("/cancleOrder",serviceController.cancleOrder);
 module.exports = router;
