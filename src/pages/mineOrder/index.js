@@ -57,6 +57,10 @@ class index extends Component {
             <div>
                 <Table rowKey={(record, index) => `complete${record.id}${index}`}
                     columns={this.state.columns} dataSource={this.state.list} />;
+
+
+
+                    
             </div>
         )
     }
