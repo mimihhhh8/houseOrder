@@ -23,7 +23,7 @@ class index extends Component {
                     key: 'experience',
                 },
                 {
-                    title: '订单状态123',
+                    title: '订单状态123456',
                     dataIndex: 'statues',
                     key: 'statues',
                     //render: (text, record, index) => {}
