@@ -23,7 +23,7 @@ class index extends Component {
                     key: 'experience',
                 },
                 {
-                    title: '订单状态',
+                    title: '订单状态123',
                     dataIndex: 'statues',
                     key: 'statues',
                     //render: (text, record, index) => {}
@@ -57,10 +57,6 @@ class index extends Component {
             <div>
                 <Table rowKey={(record, index) => `complete${record.id}${index}`}
                     columns={this.state.columns} dataSource={this.state.list} />;
-
-
-
-                    
             </div>
         )
     }
