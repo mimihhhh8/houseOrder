@@ -18,7 +18,7 @@ class index extends Component {
                     key: 'workername',
                 },
                 {
-                    title: '工龄',
+                    title: '工龄34545',
                     dataIndex: 'experience',
                     key: 'experience',
                 },
