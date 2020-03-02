@@ -98,7 +98,14 @@ import router from "umi/router"
                 alert(data.data.info)
                 localStorage.setItem("userstatus",data.data.data.userstatus)
                 localStorage.setItem("usersid",data.data.data._id)
-                router.push("/home")
+                if(localStorage.getItem("userstatus")==="unadmin"){
+                    router.push("/serveList")
+                }else if(localStorage.getItem("userstatus")==="admin"){
+                    router.push("/home")
+                }else{
+                    alert("sorry")
+                }
+                
             }else{
                 alert(data.data.info)
             }

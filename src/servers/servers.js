@@ -28,5 +28,10 @@ export default{
     // 我的订单列表
     mineOrderList:{
         mineOrderList:({payload})=>post('/service/mineOrderList',payload)
-    }
+    },
+    // 取消预约
+    
+    cancleOrder:{
+        cancleOrder:({payload})=>post('/service/cancleOrder',payload)
+    },
 } 

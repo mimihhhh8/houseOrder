@@ -47,9 +47,8 @@ export default class BasicLayout extends Component {
           defaultSelectedKeys={['2']}
           style={{ lineHeight: '64px' }}
         >
-          {/* <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item> */}
+        
+          <Menu.Item key="3" onClick={()=>this.handleExit()} >退出登录</Menu.Item>
         </Menu>
       </Header>
       <Layout>
@@ -70,7 +69,7 @@ export default class BasicLayout extends Component {
               }
             >
            
-           <Menu.Item key="1" onClick={()=>{ router.push('/home')}}>人员信息管理</Menu.Item>
+           <Menu.Item key="1" onClick={()=>{ localStorage.getItem('userstatus')==='admin'?router.push('/home'):alert("sorry")}}>人员信息管理</Menu.Item>
             <Menu.Item key="2" onClick={()=>{ router.push('/serveList')}} >用户预约列表</Menu.Item>
            {/* <Menu.Item key="1" onClick={()=>{ localStorage.getItem('userstatus')==='admin'?router.push('/home'):router.push('/')}}>人员信息管理</Menu.Item>
             <Menu.Item key="2" onClick={()=>{ localStorage.getItem('userstatus')==='admin'?router.push('/serveList'):router.push('/')}} >用户预约列表</Menu.Item> */}
@@ -151,6 +150,11 @@ export default class BasicLayout extends Component {
   //跳转管理员发布服务
   handleToOne(){
    router.push('/serveList')
+  }
+  handleExit(){
+    localStorage.removeItem("usersid")
+    localStorage.removeItem("userstatus")
+    router.push('/login')
   }
 //跳转添加服务列表
 handleToTwo(){

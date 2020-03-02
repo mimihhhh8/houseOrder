@@ -35,6 +35,13 @@ export default {
         // 我的订单列表
         *mineOrderList({reject,resolve,payload},{call,put}){
             const res=yield call(servers.mineOrderList['mineOrderList'],{payload})
+            if(res){
+                resolve(res)
+            }
+        },
+        // 取消预约
+        *cancleOrder({reject,resolve,payload},{call,put}){
+            const res=yield call(servers.cancleOrder['cancleOrder'],{payload})
             console.log(res)
             if(res){
                 resolve(res)
