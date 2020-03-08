@@ -8,4 +8,5 @@ router.post("/addService",serviceController.serviceSave);
 router.post("/updateStatues",serviceController.updateStatues);
 router.post("/mineOrderList",serviceController.mineOrderList);
 router.post("/cancleOrder",serviceController.cancleOrder);
+router.get("/deleteWorkerInfo",serviceController.deleteWorkerInfo);
 module.exports = router;

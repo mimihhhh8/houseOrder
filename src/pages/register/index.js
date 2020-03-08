@@ -129,7 +129,6 @@ class index extends Component {
     }
     //事件
     onChange = e => {
-        console.log('radio checked', e.target.value);
         this.setState({
             value: e.target.value,
         });
@@ -154,7 +153,6 @@ class index extends Component {
     }
     //用户性别
      handleChange(value) {
-         console.log(value)
         this.setState({
             sex:value
         })
@@ -199,7 +197,6 @@ class index extends Component {
                 payload
             })
         }).then((data) => {
-            console.log(data)
             if (data.data.status === 1) {
                 alert(data.data.info)
             } else {

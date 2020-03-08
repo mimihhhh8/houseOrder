@@ -16,7 +16,6 @@ var add = function(db,collections,selector,fn){
     try{
         assert.equal(err,null)
         }catch(e){
-      console.log(e);
       result = [];
     };
     
@@ -50,7 +49,6 @@ var find = function(db,collections,selector,fn){
       try{
         assert.equal(err,null);
       }catch(e){
-        console.log(e);
         result = [];
       }
       

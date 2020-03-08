@@ -1,88 +1,103 @@
-const serviceModel=require("../model/service");
-const userModel=require("../model/user");
+const serviceModel = require("../model/service");
+const userModel = require("../model/user");
 //服务列表
-const serviceList=async (req,res)=>{
-    let data=await serviceModel.serviceList();
-    // console.log(data)
+const serviceList = async (req, res) => {
+    let { serviceSearch } = req.query
+    let data = await serviceModel.serviceList(serviceSearch);
     //给前端返回数据用res.json
-    if(data){
+    if (data) {
         res.json({
-            code:200,
-            errMsg:"",
-            data:data
+            code: 200,
+            errMsg: "",
+            data: data
         })
-    }else{
+    } else {
         res.json({
-            code:200,
-            info:"数据请求失败"
+            code: 200,
+            info: "数据请求失败"
         })
     }
 }
 //管理员添加服务
-const serviceSave=async (req,res)=>{
+const serviceSave = async (req, res) => {
 
-    let { workername,workeraddress,servicetype,task,statues,experience}=req.body;
-    let data=await serviceModel.serviceSave({ workername,workeraddress,servicetype,task,statues,experience})
-    if(data){
+    let { workername, workeraddress, servicetype, task, statues, experience, id } = req.body;
+    let list = await serviceModel.userDetailWorkerid(id);
+    if (list === null) {
+        let data = await serviceModel.serviceSave({ workername, workeraddress, servicetype, task, statues, experience, id })
         res.json({
-            code:200,
-            errMsg:"",
-            data:data
+            code: 1,
+            errMsg: "",
+            data: data
         })
-    }else{
+    } else {
         res.json({
-            code:200,
-            info:"数据请求失败"
+            code: 0,
+            errMsg: "用户已存在",
+
         })
     }
+    // let data=await serviceModel.serviceSave({ workername,workeraddress,servicetype,task,statues,experience,id})
+    // if(data){
+    //     res.json({
+    //         code:200,
+    //         errMsg:"",
+    //         data:data
+    //     })
+    // }else{
+    //     res.json({
+    //         code:200,
+    //         info:"数据请求失败"
+    //     })
+    // }
 }
 //修改预约状态
-const updateStatues=async (req,res)=>{
+const updateStatues = async (req, res) => {
     //解构的变量名称与前端payload内的变量名称要一致
     // record为serveList下的index.js中<Switch/>组件中事件on-changge传过来的参数，record代表当前行的所有内容
-    let {flag,id ,userid,record}=req.body;
+    let { flag, id, userid, record } = req.body;
     // console.log(record)
-    let data=await serviceModel.updateStatues(flag,id);
-    if(data.ok===1&&flag===true){
-        let saveOrderList=await userModel.saveOrderInfo(record,userid)
-        let userDetailInfoList=await userModel.userDetailInfo(userid)
+    let data = await serviceModel.updateStatues(flag, id);
+    if (data.ok === 1 && flag === true) {
+        let saveOrderList = await userModel.saveOrderInfo(record, userid)
+        let userDetailInfoList = await userModel.userDetailInfo(userid)
         res.json({
-            code:200,
-            errMsg:"",
-            info:"预约成功",
-            data:data,
-            saveOrderList:saveOrderList,
-            userDetaiInfoList:userDetailInfoList
+            code: 200,
+            errMsg: "",
+            info: "预约成功",
+            data: data,
+            saveOrderList: saveOrderList,
+            userDetaiInfoList: userDetailInfoList
         })
-    }else if(data.ok===1&&flag===false) {
+    } else if (data.ok === 1 && flag === false) {
         res.json({
-            code:400,
-            info:"您已取消预约"
+            code: 400,
+            info: "您已取消预约"
         })
-    }else{
+    } else {
         res.json({
-            code:500,
-            info:"数据库错误"
+            code: 500,
+            info: "数据库错误"
         })
     }
 }
 // 我的订单列表
-const mineOrderList=async (req,res)=>{
-    let {userId}=req.body;
-    
-    let list=await userModel.userDetailInfo(userId);
-    if(list){
+const mineOrderList = async (req, res) => {
+    let { userId } = req.body;
+
+    let list = await userModel.userDetailInfo(userId);
+    if (list) {
         res.json({
-            code:200,
-            errMsg:"",
-            info:"获取列表成功",
-            data:list
+            code: 200,
+            errMsg: "",
+            info: "获取列表成功",
+            data: list
         })
-    }else{
+    } else {
         res.json({
-            code:500,
-            errMsg:"",
-            info:"获取列表失败",
+            code: 500,
+            errMsg: "",
+            info: "获取列表失败",
         })
     }
 }
@@ -94,29 +109,48 @@ const mineOrderList=async (req,res)=>{
     { $pull: { "items" : { id: 23 } } }
 ); 
  */
-const cancleOrder=async (req,res)=>{
-    let {flag,id,userId}=req.body
-    let cancleOrderList=await serviceModel.cancleOrder(flag,id);
-    let setOrder=await userModel.deleteYuyueUser(userId,id);
-    if(cancleOrderList&&setOrder){
+const cancleOrder = async (req, res) => {
+    let { flag, id, userId } = req.body
+    let cancleOrderList = await serviceModel.cancleOrder(flag, id);
+    let setOrder = await userModel.deleteYuyueUser(userId, id);
+    if (cancleOrderList && setOrder) {
         res.json({
-            code:200,
-            errMsg:"",
-            info:"取消预约",
-            data:cancleOrderList
+            code: 200,
+            errMsg: "",
+            info: "取消预约",
+            data: cancleOrderList
         })
-    }else{
+    } else {
         res.json({
-            code:500,
-            errMsg:"",
-            info:"取消预约失败",
+            code: 500,
+            errMsg: "",
+            info: "取消预约失败",
         })
     }
 }
-module.exports={
+// 管理员删除人员信息
+const deleteWorkerInfo = async (req, res) => {
+    let { id } = req.query
+    let data = await userModel.deleteWorkerInfo(id)
+    if (data) {
+        res.json({
+            code: 200,
+            errMsg: "",
+            info: "删除成功"
+        })
+    } else {
+        res.json({
+            code: 200,
+            errMsg: "",
+            info: "删除失败"
+        })
+    }
+}
+module.exports = {
     serviceList,
     serviceSave,
     updateStatues,
     mineOrderList,
-    cancleOrder
+    cancleOrder,
+    deleteWorkerInfo
 }

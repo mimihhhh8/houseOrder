@@ -18,12 +18,12 @@ class index extends Component {
                     key: 'workername',
                 },
                 {
-                    title: '工龄34545',
+                    title: '工龄',
                     dataIndex: 'experience',
                     key: 'experience',
                 },
                 {
-                    title: '订单状态123456',
+                    title: '订单状态',
                     dataIndex: 'statues',
                     key: 'statues',
                     //render: (text, record, index) => {}

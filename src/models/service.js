@@ -11,9 +11,8 @@ export default {
         }
     },
     effects:{
-        *serviceList({reject,resolve},{call,put}){
-            const res=yield call(servers.serviceList['serviceList'])
-            // console.log(res)
+        *serviceList({reject,resolve,payload},{call,put}){
+            const res=yield call(servers.serviceList['serviceList'],{payload})
             if(res){
                 resolve(res.data)
             }
@@ -42,10 +41,17 @@ export default {
         // 取消预约
         *cancleOrder({reject,resolve,payload},{call,put}){
             const res=yield call(servers.cancleOrder['cancleOrder'],{payload})
+            if(res){
+                resolve(res)
+            }
+        },
+        // 管理员删除人员信息
+        *deleteWorkerInfo({reject,resolve,payload},{call,put}){
+            const res=yield call(servers.deleteWorkerInfo['deleteWorkerInfo'],{payload})
             console.log(res)
             if(res){
                 resolve(res)
             }
-        }
+        },
     }
 }

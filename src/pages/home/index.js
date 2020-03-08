@@ -1,24 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table } from 'antd';
+import { Table, Button, Modal } from 'antd';
 class index extends Component {
     constructor() {
         super();
         this.state = {
             username: "",
             password: "",
-            list:[],
-            // dataSource: [
-            //     {
-            //         key:0,
-            //         username: "",
-            //         loginid: "",
-            //         phone: 0,
-            //         sex: "",
-            //         age: 0,
-            //         detailaddress: ""
-            //     },
-            // ],
+            list: [],
+            visible: false,
+            id:'',
             columns: [
                 {
                     title: '姓名',
@@ -50,18 +41,39 @@ class index extends Component {
                     dataIndex: 'detailaddress',
                     key: 'detailaddress',
                 },
+                {
+                    title: '操作',
+                    dataIndex: 'delete',
+                    key: 'delete',
+                    render: (text, record) =>
+                        (
+                            <Button type="primary" danger="true" onClick={() => this.hanndleDelete(record)}>
+                                删除
+                            </Button>
+                        )
+                },
             ]
         }
     }
     render() {
         return (
             <div>
-                <Table rowKey={(item)=>item._id}
-                    columns={this.state.columns} dataSource={this.state.list} />;
+                <Table rowKey={(item) => item._id}
+                    columns={this.state.columns} dataSource={this.state.list} />
+                <Modal
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                >
+                    <p>你确定要删除该人员信息吗？</p>
+                </Modal>
             </div>)
     }
     componentDidMount() {
+        this.renderList()
 
+    }
+    renderList() {
         new Promise((resolve, reject) => {
             this.props.dispatch({
                 //dispatch触发l一个action
@@ -72,11 +84,43 @@ class index extends Component {
             })
         }).then((data) => {
             this.setState({
-               list:data.data
+                list: data.data
             })
-            
+
         })
     }
+    hanndleDelete(record) {
+        this.setState({
+            visible: true,
+            id:record._id
+        });
+
+    }
+    handleOk = e => {
+        this.setState({
+            visible: false,
+        });
+        let id = this.state.id
+        let payload = {
+            id
+        }
+        new Promise((resolve, reject) => {
+            this.props.dispatch({
+                type: "service/deleteWorkerInfo",
+                resolve,
+                reject,
+                payload,
+            })
+        }).then((res) => {
+            this.renderList()
+        })
+    };
+
+    handleCancel = e => {
+        this.setState({
+            visible: false,
+        });
+    };
 }
 
 

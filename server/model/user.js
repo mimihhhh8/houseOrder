@@ -19,41 +19,6 @@ const User = mongoose.model("yuser", {
     // 用户预约成功，将订单信息存入用户基本信息中
     orderinfo: Array
 })
-//.........................
-const Data = mongoose.model("hoursd", {
-    date: String,
-    date_status: String,
-    date_type: String,
-    hour: String
-})
-//总数据
-const allData = () => {
-    return Data.find();
-}
-const dataFind = () => {
-    return Data.find().count();
-}
-//分页
-const hourDataPage = (page, limit) => {
-    page = Number(page);
-    limit = Number(limit);
-
-    return Data.find().skip((page - 1) * limit).limit(limit);
-}
-//日期查询
-const searchDate = (page, limit, startDate, endDate) => {
-    startDate = String(startDate);
-    endDate = String(endDate);
-    page = Number(page);
-    limit = Number(limit);
-    return Data.find({ date: { $gte: startDate, $lte: endDate } }).skip((page - 1) * limit).limit(limit);
-}
-//日期查询出的总条数
-const searchDateCount = (startDate, endDate) => {
-    startDate = String(startDate);
-    endDate = String(endDate);
-    return Data.find({ date: { $gte: startDate, $lte: endDate } }).count();
-}
 //................................
 // 查找单个用户的信息
 const userFind = (username, value) => {
@@ -74,7 +39,6 @@ const userPass = (id) => {
 }
 
 const updatePass = (id, newpassword) => {
-    console.log(id)
     return User.update({ _id: id }, { $set: { password: newpassword } })
 }
 //用户修改头像
@@ -101,6 +65,10 @@ const deleteYuyueUser=(userId,id)=>{
         {$pull:{"orderinfo":{_id:id}}}
     )
 }
+// 管理员删除人员信息
+const deleteWorkerInfo=(id)=>{
+    return User.find({_id:id}).deleteOne();
+}
 module.exports = {
     userFind,
     userSave,
@@ -109,14 +77,10 @@ module.exports = {
     UpdatePic,
     userInter,
     deleteYuyueUser,
-    dataFind,
-    hourDataPage,
-    searchDate,
-    searchDateCount,
-    allData,
     //用户总信息
     userInfo,
     // 将预约成功的服务人员信息存入用户信息中
     saveOrderInfo,
-    userDetailInfo
+    userDetailInfo,
+    deleteWorkerInfo
 }

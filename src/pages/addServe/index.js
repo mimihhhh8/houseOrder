@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Form,Input,Button } from 'antd';
+import { Card, Form,Input,Button ,message, InputNumber} from 'antd';
 import { Addserve } from './styled.js';
 import {connect} from 'dva';
 @Form.create()
@@ -13,6 +13,7 @@ import {connect} from 'dva';
             task:"",
             statues:"false",
             experience:"",
+            id:''
         }
     }
     render() {
@@ -29,6 +30,13 @@ import {connect} from 'dva';
                             getFieldDecorator('workername', {
                                 // rules: [{ message: 'Please input your note!' }],
                             })(<Input type="text" onChange={(e)=>{this.setState({workername:e.target.value})}}/>)
+                            }
+                        </Form.Item>
+                        <Form.Item label="员工ID">
+                            {
+                            getFieldDecorator('id', {
+                                // rules: [{ message: 'Please input your note!' }],
+                            })(<Input type="text" onChange={(e)=>{this.setState({id:e.target.value})}}/>)
                             }
                         </Form.Item>
                         <Form.Item label="员工地址">
@@ -67,14 +75,15 @@ import {connect} from 'dva';
         )
     }
     handleData(){
-        let { workername,workeraddress,servicetype,task,statues,experience}=this.state;
+        let { workername,workeraddress,servicetype,task,statues,experience,id}=this.state;
         let payload={
             workername,
             workeraddress,
             servicetype,
             task,
             statues,
-            experience
+            experience,
+            id
         }
         new Promise((resolve,reject)=>{
             this.props.dispatch({
@@ -84,8 +93,13 @@ import {connect} from 'dva';
                 payload
             })
         }).then((data)=>{
-
-
+            console.log(data)
+            if(data.code===1){
+                message.success("添加成功")
+            }else{
+                message.error("用户重复")
+            }
+           
         }) 
     }
 }

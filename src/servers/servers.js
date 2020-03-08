@@ -13,7 +13,7 @@ export default{
     },
     //服务列表
     serviceList:{
-        serviceList:()=>get('/service/serviceList')
+        serviceList:({payload})=>get(`/service/serviceList?serviceSearch=${payload.searchValue}`)
     },
     //添加服务,这里用到后端接口
     // /service是后端app.js中配置的（app.use("/service",serviceRouter);），/addService是后端routes文件夹下的service.js文件中的写的接口
@@ -34,4 +34,8 @@ export default{
     cancleOrder:{
         cancleOrder:({payload})=>post('/service/cancleOrder',payload)
     },
+    // 管理员删除人员信息
+    deleteWorkerInfo:{
+        deleteWorkerInfo:({payload})=>get(`/service/deleteWorkerInfo?id=${payload.id}`)
+    }
 } 
