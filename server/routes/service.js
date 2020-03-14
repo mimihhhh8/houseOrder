@@ -6,6 +6,7 @@ const serviceController=require("../controller/service");
 router.get("/serviceList",serviceController.serviceList);
 router.post("/addService",serviceController.serviceSave);
 router.post("/updateStatues",serviceController.updateStatues);
+router.post("/updateJurisdiction",serviceController.updateJurisdiction);
 router.post("/mineOrderList",serviceController.mineOrderList);
 router.post("/cancleOrder",serviceController.cancleOrder);
 router.get("/deleteWorkerInfo",serviceController.deleteWorkerInfo);

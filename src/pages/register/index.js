@@ -28,8 +28,9 @@ class index extends Component {
                     </div>
                     <div className="radio">
                         <Radio.Group onChange={this.onChange} value={this.state.value}>
-                            <Radio value={'admin'}>管理员</Radio>
-                            <Radio value={'unadmin'}>用户</Radio>
+                            <Radio value={'admin'}>客户</Radio>
+                            <Radio value={'superadmin'}>管理员</Radio>
+                            <Radio value={'unadmin'}>服务人员</Radio>
                         </Radio.Group>
                     </div>
                     <div className="username">

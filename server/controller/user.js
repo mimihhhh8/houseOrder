@@ -5,10 +5,10 @@ const crypto = require('crypto');
 
 // 用户注册判断
 const userRegister = async (req, res) => {
-    let { username, password,value ,loginid, phone ,sex,age,detailaddress} = req.body;
-    let orderinfo={}
-    let data = await userModel.userFind( username,value );
-    if (data.length===1) {
+    let { username, password, value, loginid, phone, sex, age, detailaddress } = req.body;
+    let orderinfo = {}
+    let data = await userModel.userFind(username, value);
+    if (data.length === 1) {
         res.json({//response响应数据 传送给前端  JSON格式的数据
             code: 200,
             errMsg: "",
@@ -25,14 +25,17 @@ const userRegister = async (req, res) => {
         hash.update(password);
 
         // 用户登陆状态
-        let status = true;
+        let status = false;
+        let yytime = "";
+        let yyid = "";
+        let Jurisdiction = true;
         // 用户注册时间
         let registerTime = new Date().getTime();
         // 用户的随机名称
         let name = Math.random().toString(36).substr(2, 8);
         // 默认用户头像
         let urlPic = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1578997777&di=513e95c541cfcb3ebbf566cf929a491d&src=http://www.17qq.com/img_qqtouxiang/75876952.jpeg";
-        let saveData = await userModel.userSave({ username, password: hash.digest("hex"), status, registerTime, name, urlPic,userstatus:value ,loginid, phone,sex ,age,detailaddress,orderinfo});
+        let saveData = await userModel.userSave({ username, password: hash.digest("hex"), Jurisdiction, status, yytime, yyid, registerTime, name, urlPic, userstatus: value, loginid, phone, sex, age, detailaddress, orderinfo });
         if (saveData) {
             res.json({
                 code: 200,
@@ -40,22 +43,43 @@ const userRegister = async (req, res) => {
                 data: {
                     info: "注册成功",
                     status: 1,
-                    data:saveData
+                    data: saveData
                 }
             })
         }
     }
 }
-// 用户修改密码判断
+// 管理员重置密码
+const resetpassword = async (req, res) => {
+    let { id } = req.body;
+    let password = "123456";//重置后的默认密码
+    // 创建加密算法
+    const hash = crypto.createHash("sha256");
+    // 对数据进行加密
+   hash.update(password);
+    let reset = await userModel.updatePass(id, hash.digest("hex"));
+    if(reset.ok===1){
+        res.json({
+            code: 1,
+            info: "重置成功",
+        })
+    }else{
+        res.json({
+            code: 0,
+            info: "重置失败",
+        })
+    }
+
+}
 
 // 用户登陆判断
 const userLogin = async (req, res) => {
     // 得到username 和password
-    let { username, password,value } = req.body;
-  
+    let { username, password, value } = req.body;
+
     // 查看用户名是否存在
-    let userData = await userModel.userFind(username,value);
-    if (userData.length===1) {//如果存在
+    let userData = await userModel.userFind(username, value);
+    if (userData.length === 1) {//如果存在
         /* 
             进行密码和用户名的校验
             密码在数据库中已经加密，
@@ -63,9 +87,9 @@ const userLogin = async (req, res) => {
 
          */
         // console.log(userData[0].status) 
-        if (userData[0].status==true) {
+        if (userData[0].Jurisdiction == true) {
             // 创建加密算法
-           
+
             const hash = crypto.createHash("sha256");
             // 对数据进行加密
             hash.update(password);
@@ -78,7 +102,7 @@ const userLogin = async (req, res) => {
                 res.cookie("token", token)
                 // console.log(res.cookie())
 
-                
+
                 res.json({
                     code: 200,
                     errMsg: "",
@@ -100,7 +124,12 @@ const userLogin = async (req, res) => {
             }
         } else {
             res.json({
-
+                code: 200,
+                errMsg: "",
+                data: {
+                    info: "权限被封，请联系管理员",
+                    code: 3,
+                }
             })
         }
 
@@ -116,18 +145,19 @@ const userLogin = async (req, res) => {
     }
 }
 //用户总信息列表
-const userInfo=async (req,res)=>{
-    let userInfoList=await userModel.userInfo();
-    if(userInfoList){
+const userInfo = async (req, res) => {
+    let { serviceSearch } = req.query
+    let userInfoList = await userModel.userInfo(serviceSearch);
+    if (userInfoList) {
         res.json({
-            errMsg:"",
-            data:userInfoList,
-            info:"数据请求成功"
+            errMsg: "",
+            data: userInfoList,
+            info: "数据请求成功"
         })
-    }else{
+    } else {
         res.json({
-            errMsg:"",
-            info:"数据请求失败"
+            errMsg: "",
+            info: "数据请求失败"
         })
     }
 }
@@ -147,7 +177,7 @@ const userPassword = async (req, res) => {
         // //加密 3、对数据进行加密
         newhash.update(newpassword);
         let pass = newhash.digest('hex')
-   
+
 
         let updatedata = await userModel.updatePass(id, pass);
         if (updatedata) {
@@ -245,28 +275,28 @@ const dataAllInfo = async (req, res) => {
     }
 }
 //分页
-const hourDataList=async (req,res)=>{
+const hourDataList = async (req, res) => {
     //前端传过来的数据
-    let {page,limit,startDate,endDate}=req.query;
+    let { page, limit, startDate, endDate } = req.query;
     // console.log(page,limit,startDate,endDate)
-    let data=await userModel.hourDataPage(page,limit);
-    let allData=await userModel.allData();
-    if (data.length!==0) {
+    let data = await userModel.hourDataPage(page, limit);
+    let allData = await userModel.allData();
+    if (data.length !== 0) {
         //查询
-        let searchData=await userModel.searchDate(page,limit,startDate,endDate);
-        if(searchData){
+        let searchData = await userModel.searchDate(page, limit, startDate, endDate);
+        if (searchData) {
             res.json({
-                code:200,
-                errMsg:"",
-                searchData:searchData,
-                data:data,
-                allData:allData
+                code: 200,
+                errMsg: "",
+                searchData: searchData,
+                data: data,
+                allData: allData
             })
-        }else{
+        } else {
             res.json({
-                code:200,
-                errMsg:"",
-                info:"get data failure"
+                code: 200,
+                errMsg: "",
+                info: "get data failure"
             })
         }
         res.json({//response响应数据 传送给前端  JSON格式的数据
@@ -278,27 +308,27 @@ const hourDataList=async (req,res)=>{
                 data: data
             }
         })
-    }else{
+    } else {
         res.json({
-            code:200,
-            errMsg:"",
-            data:{
-                info:"page",
-                status:"failure"
+            code: 200,
+            errMsg: "",
+            data: {
+                info: "page",
+                status: "failure"
             }
         })
     }
 
 }
 //日期查询总条数
-const searchDateCount=async (req,res)=>{
-    let {startDate,endDate}=req.query;
-    let count=await userModel.searchDateCount(startDate,endDate);
-    if(count){
+const searchDateCount = async (req, res) => {
+    let { startDate, endDate } = req.query;
+    let count = await userModel.searchDateCount(startDate, endDate);
+    if (count) {
         res.json({
-            code:200,
-            errMsg:'',
-            count:count
+            code: 200,
+            errMsg: '',
+            count: count
         })
     }
 }
@@ -311,7 +341,7 @@ module.exports = {
     userPassword,
     userPic,
     userInter,
-    
+    resetpassword,
 
     dataAllInfo,
     hourDataList,

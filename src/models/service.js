@@ -31,6 +31,13 @@ export default {
                 resolve(res)
             }
         },
+        *updateJurisdiction({reject,resolve,payload},{call,put}){
+            const res=yield call(servers.updateJurisdiction['updateJurisdiction'],{payload})
+            yield put({type:"userOrderInfo",userOrderInfo:res})
+            if(res){
+                resolve(res)
+            }
+        },
         // 我的订单列表
         *mineOrderList({reject,resolve,payload},{call,put}){
             const res=yield call(servers.mineOrderList['mineOrderList'],{payload})

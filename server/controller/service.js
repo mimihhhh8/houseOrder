@@ -21,43 +21,56 @@ const serviceList = async (req, res) => {
 //管理员添加服务
 const serviceSave = async (req, res) => {
 
-    let { workername, workeraddress, servicetype, task, statues, experience, id } = req.body;
-    let list = await serviceModel.userDetailWorkerid(id);
-    if (list === null) {
-        let data = await serviceModel.serviceSave({ workername, workeraddress, servicetype, task, statues, experience, id })
+    let {workeraddress, char,servicetype, task, statues, experience, id, _id,
+        username,
+        registerTime,
+        name,
+        loginid,
+        phone,
+        age,
+        sex,
+        detailaddress, } = req.body;
+    let record={
+        workeraddress,
+        char,
+        servicetype,
+        task,
+        statues,
+        experience,
+        _id,
+        username,
+        registerTime,
+        name,
+        loginid,
+        phone,
+        age,
+        sex,
+        detailaddress,
+
+    }
+    let saveOrderList = await userModel.saveServiceInfo(record, id)
+    if (saveOrderList.ok === 1){
         res.json({
-            code: 1,
-            errMsg: "",
-            data: data
-        })
-    } else {
+                    code: 1,
+                    errMsg: "",
+                    message:"完善成功"
+                })
+    }else{
         res.json({
             code: 0,
-            errMsg: "用户已存在",
-
+            errMsg: "",
+            message:"服务器错误"
         })
     }
-    // let data=await serviceModel.serviceSave({ workername,workeraddress,servicetype,task,statues,experience,id})
-    // if(data){
-    //     res.json({
-    //         code:200,
-    //         errMsg:"",
-    //         data:data
-    //     })
-    // }else{
-    //     res.json({
-    //         code:200,
-    //         info:"数据请求失败"
-    //     })
-    // }
 }
 //修改预约状态
 const updateStatues = async (req, res) => {
     //解构的变量名称与前端payload内的变量名称要一致
     // record为serveList下的index.js中<Switch/>组件中事件on-changge传过来的参数，record代表当前行的所有内容
-    let { flag, id, userid, record } = req.body;
+    let { flag, id, userid, record,yytime } = req.body;
     // console.log(record)
-    let data = await serviceModel.updateStatues(flag, id);
+    let data = await userModel.updateStatues(flag,yytime, id,userid);
+    console.log(data)
     if (data.ok === 1 && flag === true) {
         let saveOrderList = await userModel.saveOrderInfo(record, userid)
         let userDetailInfoList = await userModel.userDetailInfo(userid)
@@ -68,6 +81,32 @@ const updateStatues = async (req, res) => {
             data: data,
             saveOrderList: saveOrderList,
             userDetaiInfoList: userDetailInfoList
+        })
+    } else if (data.ok === 1 && flag === false) {
+        res.json({
+            code: 400,
+            info: "您已取消预约"
+        })
+    } else {
+        res.json({
+            code: 500,
+            info: "数据库错误"
+        })
+    }
+}
+const updateJurisdiction = async (req, res) => {
+    //解构的变量名称与前端payload内的变量名称要一致
+    // record为serveList下的index.js中<Switch/>组件中事件on-changge传过来的参数，record代表当前行的所有内容
+    let { flag, id} = req.body;
+    console.log(flag, id)
+    let data = await userModel.updateJurisdiction(flag,id);
+    // console.log(data)
+    if (data.ok === 1) {
+        res.json({
+            code: 200,
+            errMsg: "",
+            info: "修改成功",
+            data: data
         })
     } else if (data.ok === 1 && flag === false) {
         res.json({
@@ -110,8 +149,10 @@ const mineOrderList = async (req, res) => {
 ); 
  */
 const cancleOrder = async (req, res) => {
-    let { flag, id, userId } = req.body
-    let cancleOrderList = await serviceModel.cancleOrder(flag, id);
+    let { flag, id, userId,value } = req.body
+    let cancleOrderList = await userModel.cancleOrder(flag, id);
+    let pingjia = await userModel.pingjia(value, id);
+    console.log(pingjia)
     let setOrder = await userModel.deleteYuyueUser(userId, id);
     if (cancleOrderList && setOrder) {
         res.json({
@@ -147,6 +188,7 @@ const deleteWorkerInfo = async (req, res) => {
     }
 }
 module.exports = {
+    updateJurisdiction,
     serviceList,
     serviceSave,
     updateStatues,

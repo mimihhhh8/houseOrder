@@ -22,8 +22,9 @@ import router from "umi/router"
                     </div>
                     <div className="radio">
                         <Radio.Group onChange={this.onChange} value={this.state.value}>
-                            <Radio value={'admin'}>管理员</Radio>
-                            <Radio value={'unadmin'}>用户</Radio>
+                            <Radio value={'admin'}>客户</Radio>
+                            <Radio value={'superadmin'}>管理员</Radio>
+                            <Radio value={'unadmin'}>服务人员</Radio>
                         </Radio.Group>
                     </div>
                     <div className="username">
@@ -94,16 +95,19 @@ import router from "umi/router"
                 payload
             })
         }).then((data)=>{
+            console.log(data,'user')
             if(data.data.code===1){
                 alert(data.data.info)
                 localStorage.setItem("userstatus",data.data.data.userstatus)
                 localStorage.setItem("usersid",data.data.data._id)
-                if(localStorage.getItem("userstatus")==="unadmin"){
+                if(localStorage.getItem("userstatus")==="admin"){
                     router.push("/serveList")
-                }else if(localStorage.getItem("userstatus")==="admin"){
+                }else if(localStorage.getItem("userstatus")==="unadmin"){
+                    router.push("/addServe")
+                }else if(localStorage.getItem("userstatus")==="superadmin"){
                     router.push("/home")
                 }else{
-                    alert("sorry")
+                    alert("什么情况")
                 }
                 
             }else{

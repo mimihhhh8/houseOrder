@@ -5,9 +5,12 @@ var router = express.Router();
 const userController=require("../controller/user")
 // 注册接口
 router.post("/register",userController.userRegister);
+
+router.post("/register",userController.userRegister);
 //用户信息列表
 router.get("/userInfoList",userController.userInfo);
-
+//重置密码
+router.post("/resetpassword",userController.resetpassword)
 
 // 登陆接口
 router.post("/login",userController.userLogin)

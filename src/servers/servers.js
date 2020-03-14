@@ -4,18 +4,19 @@ export default{
     login:{
         login:({payload})=>post('/users/login',payload)
     },
+    // zhuce
     register:{
         register:({payload})=>post('/users/register',payload)
     },
     //用户信息列表
     userInfoList:{
-        userInfoList:()=>get('/users/userInfoList')
+        userInfoList:({payload})=>get(`/users/userInfoList?serviceSearch=${payload.searchValue}`)
     },
     //服务列表
     serviceList:{
         serviceList:({payload})=>get(`/service/serviceList?serviceSearch=${payload.searchValue}`)
     },
-    //添加服务,这里用到后端接口
+    //完善信息,这里用到后端接口
     // /service是后端app.js中配置的（app.use("/service",serviceRouter);），/addService是后端routes文件夹下的service.js文件中的写的接口
     //
     serviceSave:{
@@ -24,6 +25,13 @@ export default{
     //修改预约状态
     updateStatues:{
         updateStatues:({payload})=>post('/service/updateStatues',payload)
+    },
+    // 重置密码
+    resetpassword:{
+        resetpassword:({payload})=>post('/users/resetpassword',payload)
+    },
+    updateJurisdiction:{
+        updateJurisdiction:({payload})=>post('/service/updateJurisdiction',payload)
     },
     // 我的订单列表
     mineOrderList:{
