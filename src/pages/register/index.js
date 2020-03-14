@@ -28,8 +28,9 @@ class index extends Component {
                     </div>
                     <div className="radio">
                         <Radio.Group onChange={this.onChange} value={this.state.value}>
-                            <Radio value={'admin'}>管理员</Radio>
-                            <Radio value={'unadmin'}>用户</Radio>
+                            <Radio value={'admin'}>客户</Radio>
+                            <Radio value={'superadmin'}>管理员</Radio>
+                            <Radio value={'unadmin'}>服务人员</Radio>
                         </Radio.Group>
                     </div>
                     <div className="username">
@@ -129,7 +130,6 @@ class index extends Component {
     }
     //事件
     onChange = e => {
-        console.log('radio checked', e.target.value);
         this.setState({
             value: e.target.value,
         });
@@ -154,7 +154,6 @@ class index extends Component {
     }
     //用户性别
      handleChange(value) {
-         console.log(value)
         this.setState({
             sex:value
         })
@@ -199,7 +198,6 @@ class index extends Component {
                 payload
             })
         }).then((data) => {
-            console.log(data)
             if (data.data.status === 1) {
                 alert(data.data.info)
             } else {

@@ -29,8 +29,6 @@ effects: {
 
 ​            const res = yield call(servers.login['login'], { payload })
 
-​            console.log(res)
-
  
 
 ​    }

@@ -1,6 +1,8 @@
 
 // ref: https://umijs.org/config/
 export default {
+  // hash:true,
+  // history:"hash",
   treeShaking: true,
   routes: [
     {
@@ -14,6 +16,7 @@ export default {
         {path:'/login',component:'../pages/login/index'},
         {path:'/register',component:'../pages/register/index'},
         {path:'/mineOrder',component:'../pages/mineOrder/index'},
+        {path:'/mineappointment',component:'../pages/mineAppointment/index'},
       ]
     },
     // { path: '/login/', component: '../pages/login/index.js' },

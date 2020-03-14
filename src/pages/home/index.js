@@ -1,81 +1,49 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table } from 'antd';
+import {Tabs } from 'antd';
+import ServedPersonnel from '../components/ServedPersonnel'
+import ServicePersonal from '../components/ServicePersonal'
+import Admin from "../components/admin"
+const { TabPane } = Tabs;
+
 class index extends Component {
     constructor() {
         super();
         this.state = {
-            username: "",
-            password: "",
-            list:[],
-            // dataSource: [
-            //     {
-            //         key:0,
-            //         username: "",
-            //         loginid: "",
-            //         phone: 0,
-            //         sex: "",
-            //         age: 0,
-            //         detailaddress: ""
-            //     },
-            // ],
-            columns: [
-                {
-                    title: '姓名',
-                    dataIndex: 'username',
-                    key: 'username',
-                },
-                {
-                    title: '用户ID',
-                    dataIndex: 'loginid',
-                    key: 'loginid',
-                },
-                {
-                    title: '手机号',
-                    dataIndex: 'phone',
-                    key: 'phone',
-                },
-                {
-                    title: '性别',
-                    dataIndex: 'sex',
-                    key: 'sex',
-                },
-                {
-                    title: '年龄',
-                    dataIndex: 'age',
-                    key: 'age',
-                },
-                {
-                    title: '住址',
-                    dataIndex: 'detailaddress',
-                    key: 'detailaddress',
-                },
-            ]
+            activeIndex: "1",
         }
+    }
+    // componentWillMount(){
+    //     if(localStorage.getItem("userstatus")==="superadmin"){
+
+    //     }else{
+    //         alert("D")
+    //     }
+    // }
+    dataRefresh = (key) => {
+        //切换当面面板
+        this.setState({
+            activeIndex: key
+        })
     }
     render() {
         return (
             <div>
-                <Table rowKey={(item)=>item._id}
-                    columns={this.state.columns} dataSource={this.state.list} />;
-            </div>)
+                <Tabs defaultActiveKey={this.state.activeIndex} activeKey={this.state.activeIndex} onChange={(key) => this.dataRefresh(key)} type="card">
+                    <TabPane tab="被服务人员信息管理" key="1">
+                        <ServedPersonnel />
+                    </TabPane>
+                    <TabPane tab="服务人员信息管理" key="2">
+                        <ServicePersonal />
+                    </TabPane>
+                    <TabPane tab="管理人员信息管理" key="3">
+                       <Admin></Admin>
+                    </TabPane>
+                </Tabs>,
+            </div>
+        )
     }
     componentDidMount() {
-
-        new Promise((resolve, reject) => {
-            this.props.dispatch({
-                //dispatch触发l一个action
-                //user是命名空间（models中），login是user下面的方法
-                type: "user/userInfoList",
-                resolve,
-                reject,
-            })
-        }).then((data) => {
-            this.setState({
-               list:data.data
-            })
-            
-        })
     }
 }
 

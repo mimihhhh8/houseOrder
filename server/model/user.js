@@ -5,55 +5,23 @@ const User = mongoose.model("yuser", {
     username: String,
     password: String,
     status: Boolean,
+    Jurisdiction:Boolean,
     registerTime: Number,
     name: String,
     urlPic: String,
     userstatus: String,
-
     loginid: String,
     phone: Number,
     sex: String,
     age: Number,
     detailaddress: String,
-
+    yytime:String,
+    yyid:String,
     // 用户预约成功，将订单信息存入用户基本信息中
-    orderinfo: Array
+    orderinfo: Array,
+    serviceInfo: Array,
+    pingjia: Array,
 })
-//.........................
-const Data = mongoose.model("hoursd", {
-    date: String,
-    date_status: String,
-    date_type: String,
-    hour: String
-})
-//总数据
-const allData = () => {
-    return Data.find();
-}
-const dataFind = () => {
-    return Data.find().count();
-}
-//分页
-const hourDataPage = (page, limit) => {
-    page = Number(page);
-    limit = Number(limit);
-
-    return Data.find().skip((page - 1) * limit).limit(limit);
-}
-//日期查询
-const searchDate = (page, limit, startDate, endDate) => {
-    startDate = String(startDate);
-    endDate = String(endDate);
-    page = Number(page);
-    limit = Number(limit);
-    return Data.find({ date: { $gte: startDate, $lte: endDate } }).skip((page - 1) * limit).limit(limit);
-}
-//日期查询出的总条数
-const searchDateCount = (startDate, endDate) => {
-    startDate = String(startDate);
-    endDate = String(endDate);
-    return Data.find({ date: { $gte: startDate, $lte: endDate } }).count();
-}
 //................................
 // 查找单个用户的信息
 const userFind = (username, value) => {
@@ -66,15 +34,20 @@ const userSave = (userInfo, cb) => {
     return user.save()
 }
 //查询用户总信息，前端渲染
-const userInfo = () => {
-    return User.find()
+const userInfo = (searchValue) => {
+    if(searchValue==='')
+    {
+        return User.find();
+    }else if(searchValue!==''){
+
+        return User.find({username:{$regex:searchValue}})
+    }
 }
 const userPass = (id) => {
     return User.findOne({ _id: id });
 }
 
 const updatePass = (id, newpassword) => {
-    console.log(id)
     return User.update({ _id: id }, { $set: { password: newpassword } })
 }
 //用户修改头像
@@ -86,10 +59,29 @@ const userInter = (id) => {
     return User.findOne({ _id: id });
 }
 
-
+const updateStatues=(value,yytime,id,yyid)=>{
+    return User.update({_id:id},{$set:{status:value,yytime:yytime,yyid:yyid}},{multi:true})
+}
+const updateJurisdiction=(value,id)=>{
+    return User.update({_id:id},{$set:{Jurisdiction:value}})
+}
 //在用户预约列表页，显示预约成功以后，将服务人员的信息存入用户信息中
 const saveOrderInfo = (record, userid) => {
+    console.log(record)
     return User.update({ _id: userid }, { $push: { "orderinfo": record } })
+}
+// 取消预约
+const cancleOrder=(flag,id)=>{
+    return User.update({ _id: id }, { $set: { status: flag,yyid:"" }},{multi:true})
+}
+// const resetpassword=(id,pass)=>{
+//     return User.update({ _id: id }, { $set: { status: flag,yyid:"" }},{multi:true})
+// }
+const pingjia=(value,id)=>{
+    return User.update({ _id: id }, { $push: { pingjia: value } })
+}
+const saveServiceInfo = (record, userid) => {
+    return User.update({ _id: userid }, { $push: { "serviceInfo": record } })
 }
 //获取用户详细信息，包含了订单信息
 const userDetailInfo=(userid)=>{
@@ -101,7 +93,17 @@ const deleteYuyueUser=(userId,id)=>{
         {$pull:{"orderinfo":{_id:id}}}
     )
 }
+// 管理员删除人员信息
+const deleteWorkerInfo=(id)=>{
+    return User.find({_id:id}).deleteOne();
+}
 module.exports = {
+    // resetpassword,
+    updateJurisdiction,
+    pingjia,
+    cancleOrder,
+    updateStatues,
+    saveServiceInfo,
     userFind,
     userSave,
     userPass,
@@ -109,14 +111,10 @@ module.exports = {
     UpdatePic,
     userInter,
     deleteYuyueUser,
-    dataFind,
-    hourDataPage,
-    searchDate,
-    searchDateCount,
-    allData,
     //用户总信息
     userInfo,
     // 将预约成功的服务人员信息存入用户信息中
     saveOrderInfo,
-    userDetailInfo
+    userDetailInfo,
+    deleteWorkerInfo
 }
